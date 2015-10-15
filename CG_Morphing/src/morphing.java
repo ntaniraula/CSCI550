@@ -6,7 +6,6 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.Scanner;
 import java.awt.Graphics.*;
-import java.awt.Point;
 
 public class morphing extends JFrame
 {
@@ -34,6 +33,7 @@ public class morphing extends JFrame
 class cvMorphing extends Canvas implements MouseListener{
 	int n = 7; 						//a sample number of vertices
 	Point[] vertex = new Point[n];
+	Polygon polygon = new Polygon();
 	
  public cvMorphing(){
 	 this.addMouseListener(this);
@@ -63,6 +63,16 @@ private void drawButton(Graphics g, int x,int y,String text)
 	
 }
  
+//Draw different points on the polygon on every mouse click
+private void draw_Poly_points(Polygon p, Graphics g)
+{
+	int Poly_points = p.npoints;
+	for (int i =0; i < Poly_points; i++)
+	{
+		g.fillRect(p.xpoints[i] -1, p.ypoints[i]-1, 2, 2);
+	}
+	
+}
  
  
  
