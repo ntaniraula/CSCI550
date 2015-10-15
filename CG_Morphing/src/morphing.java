@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.Scanner;
 import java.awt.Graphics.*;
+import java.awt.Point;
 
 public class morphing extends JFrame
 {
@@ -31,6 +32,8 @@ public class morphing extends JFrame
 }
 
 class cvMorphing extends Canvas implements MouseListener{
+	int n = 7; 						//a sample number of vertices
+	Point[] vertex = new Point[n];
 	
  public cvMorphing(){
 	 this.addMouseListener(this);
