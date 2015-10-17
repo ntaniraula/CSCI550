@@ -8,10 +8,10 @@ import java.util.Scanner;
 import java.awt.Graphics.*;
 import java.awt.Polygon.*;
 
-public class morphing extends JFrame {
+public class Morphing extends JFrame {
 	public static void main(String args[]) {
 
-		morphing m = new morphing();
+		Morphing m = new Morphing();
 		m.setVisible(true);
 		m.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
@@ -20,7 +20,7 @@ public class morphing extends JFrame {
 		});
 	}
 
-	public morphing() {
+	public Morphing() {
 		setTitle("Incenter of Triangle");
 		setSize(400, 400);
 		add("Center", new cvMorphing());
