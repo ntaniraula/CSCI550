@@ -12,14 +12,14 @@ public class MorphablePolygon {
 		this.points = points;
 	}
 	//see setPoints()
-	public MorphablePolygon(Polygon p1, Point2D c1, Polygon p2, Point2D c2) {
-		setPoints(p1, c1, p2, c2);
+	public MorphablePolygon(Polygon pA, Point2D cA, Polygon pB, Point2D cB) {
+		setPoints(pA, cA, pB, cB);
 	}
 	
 	//set the points by way of two polygons & two center points
-	//p1 & p2 = polygon 1 & 2 respectively
-	//c1 & c2 = center 1 & 2 respectively
-	public void setPoints(Polygon p1, Point2D c1, Polygon p2, Point2D c2) {
+	//pA & pB = polygon A & B respectively
+	//cA & cB = center of polygon A & B respectively
+	public void setPoints(Polygon pA, Point2D cA, Polygon pB, Point2D cB) {
 		//todo
 	}
 }
