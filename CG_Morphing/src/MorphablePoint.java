@@ -21,14 +21,34 @@ public class MorphablePoint {
 	}
 	
 	//get the unit vector between stateA & stateB
-	public Point2D unitVector() {
-		float dX = 0f, dY = 0f;
+	//toStateA : the direction of the transition.
+	//           true if it's going from stateB to stateA, false otherwise.
+	public Point2D unitVector(boolean toStateA) {
+		float direction = toStateA ? -1.0f : 1f;
+		float uX = 0f, uY = 0f;
 		float distance = distance();
 		if (distance != 0 &&
 			stateA != null && stateB != null) {
-			dX = (stateB.x - stateA.x)/distance;
-			dY = (stateB.y - stateB.y)/distance;
+			uX = direction * ((stateB.x - stateA.x)/distance);
+			uY = direction * ((stateB.y - stateA.y)/distance);
 		}
-		return new Point2D(dX, dY);
+		return new Point2D(uX, uY);
+	}
+	
+	//get the transition point between stateA & stateB
+	//maxSteps : the maximum number of transition steps.
+	//step     : the current step no. for the requested transition point.
+	//           if transition is going from stateB to stateA:
+	//              step 0            == exactly at stateB
+	//              step maxSteps + 1 == exactly at stateA
+	//toStateA : the direction of the transition.
+	//           true if it's going from stateB to stateA, false otherwise.
+	public Point2D transitionPoint(int maxSteps, int step, boolean toStateA) {
+		float unitDistance = (maxSteps + 1)/distance();
+		Point2D originState = toStateA ? stateA : stateB;
+		
+		float tX = originState.x + step * unitVector(toStateA).x * unitDistance;
+		float tY = originState.y + step * unitVector(toStateA).y * unitDistance;
+		return new Point2D(tX, tY);
 	}
 }
