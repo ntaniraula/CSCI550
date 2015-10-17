@@ -30,14 +30,14 @@ public class morphing extends JFrame {
 
 class cvMorphing extends Canvas implements MouseListener {
 	int PCenterX, PCenterY;
-	Polygon polygon = new Polygon();
-	// Graphics g ;
 	int countClick = 0;
 	boolean polygonClosed;
+	Polygon polygon = new Polygon();
+	DashLine dLine = new DashLine(5, 5);
 
 	public cvMorphing() {
 		this.addMouseListener(this);
-		// this.g = this.getGraphics();
+		
 
 	}
 
@@ -60,20 +60,42 @@ class cvMorphing extends Canvas implements MouseListener {
 		}
 		if (countClick >= 2) {
 			draw_Poly_points(polygon, g);
-
+			
 		}
+
 	}
 
 	// Draw different points on the polygon on every mouse click
 	private void draw_Poly_points(Polygon p, Graphics g) {
 		int Poly_points = p.npoints;
+		double distanceRefrence;
+		Point2D SP = new Point2D();
+		Point Ref = new Point();
+		
 		for (int i = 0; i < Poly_points; i++) {
 			g.fillRect(p.xpoints[i] - 2, p.ypoints[i] - 2, 4, 4);
 			if (i > 0)
 				g.drawLine(p.xpoints[i - 1], p.ypoints[i - 1], p.xpoints[i], p.ypoints[i]);
 			if (i == 0)
 				g.drawArc(p.xpoints[i] - 5, p.ypoints[i] - 5, 10, 10, 0, 360);
+			
+			//After the polygon gets closed draw a reference line from the center.
+			if(polygonClosed == true)
+			{
+				distanceRefrence = Math.sqrt(((polygon.xpoints[0]-PCenterX)*(polygon.xpoints[0]-PCenterX)) +((polygon.ypoints[0]-PCenterY)*(polygon.ypoints[0]-PCenterY)));
+				//unit vector of reference line
+				SP.x =(float)(((polygon.xpoints[0]-PCenterX)/distanceRefrence));
+				SP.y = (float)(((polygon.ypoints[0]-PCenterY))/distanceRefrence);
+				Ref.x = (int)(polygon.xpoints[0] + distanceRefrence * SP.x);
+				Ref.y = (int)(polygon.ypoints[0] + distanceRefrence * SP.y);
+				g.drawLine(PCenterX,PCenterY,Ref.x,Ref.y);
+				
+				
+			}
+
 		}
+
+		
 
 	}
 
@@ -97,6 +119,7 @@ class cvMorphing extends Canvas implements MouseListener {
 					polygon.addPoint(event.getX(), event.getY());
 
 				}
+				
 			}
 		}
 
