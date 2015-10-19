@@ -46,4 +46,27 @@ public class MorphablePolygon {
 		}
 		//temporary logic - END
 	}
+	
+	//get the transition polygon between stateA & stateB
+	//maxSteps : the maximum number of transition steps.
+	//step     : the current step no. for the requested transition point.
+	//           if transition is going from stateB to stateA:
+	//              step 0            == exactly at stateB
+	//              step maxSteps + 1 == exactly at stateA
+	//toStateA : the direction of the transition.
+	//           true if it's going from stateB to stateA, false otherwise.
+	public Polygon transitionPolygon(int maxSteps, int step, boolean toStateA) {
+		Polygon tPolygon = new Polygon();
+		
+		if (null != points && points.size() > 0) {
+			for (int i = 0; i < points.size(); i++) {
+				Point2D tPoint = points.get(i)
+					.transitionPoint(maxSteps, step, toStateA);
+				tPolygon.addPoint(
+					Math.round(tPoint.x), Math.round(tPoint.y));
+			}
+		}
+		
+		return tPolygon;
+	}
 }
