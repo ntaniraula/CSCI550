@@ -69,4 +69,31 @@ public class MorphablePolygon {
 		
 		return tPolygon;
 	}
+	
+	//check whether a point is in a less position relative
+	//to the center in a counter clockwise direction
+	private int pointCcwLess(Point2D p1, Point2D p2) {
+		int isTrue   =  1;
+		int isFalse  = -1;
+		int areEqual =  0;
+	
+		if (p1.x - center.x >= 0 && p2.x - center.x < 0)
+			return isTrue;
+		if (p1.x - center.x < 0 && p2.x - center.x >= 0)
+			return isFalse;
+		if (p1.x - center.x == 0 && p2.x - center.x == 0) {
+			if (p1.y - center.y >= 0 || p2.y - center.y >= 0)
+				return p1.y > p2.y ? isTrue : isFalse;
+			return p2.y > p1.y ? isTrue : isFalse;
+		}
+		
+		//get determinant
+		float det = ((p1.x - center.x) * (p2.y - center.y)) -
+			((p2.x - center.x) * (p1.y - center.y));
+		if (det < 0) return isTrue;
+		if (det > 0) return isFalse;
+		
+		//p1 & p2 are on the same line from the center
+		return areEqual;
+	}
 }
