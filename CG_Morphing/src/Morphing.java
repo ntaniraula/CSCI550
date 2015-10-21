@@ -40,46 +40,52 @@ class CvMorphing extends Canvas implements MouseListener {
 	double distanceRefrence; // calculating the distance between polygon
 								// starting vertex to center
 
-	Point2D dirCP = new Point2D(); // point to find the vector for the reference
-									// line
 	Point hRefLinePoint, vRefLinePoint;
+
+	MorphAnimation morphAnim;
 
 	public CvMorphing() {
 		this.addMouseListener(this);
-
 	}
 
 	// paint method to draw polygons
 	public void paint(Graphics g) {
-		super.paint(g);
 		Dimension d = getSize();
-		
-		if(!MouseClicked)
-		{
+		if (refPolyClosed && targetPolyClosed) {
+			//g.setColor(Color.white);
+			//g.fillRect(0, 0, d.width, d.height);
+			startAnimation();
+		} else {
+			if (!MouseClicked) {
 				msg = "Please Click to start";
-				g.drawString(msg, (d.width - 100)/2, (d.height-100)/2);
-		}
-		else
-		{
+				g.drawString(msg, (d.width - 100) / 2, (d.height - 100) / 2);
+			} else {
 				msg = "In order to draw polygon you have to always move in Clockwise Direction";
 				g.drawString(msg, 20, 20);
-		}
-		drawPolygon(targetPolygon, g, Color.BLUE, targetPolyClosed);
-		drawPolygon(refPolygon, g, Color.MAGENTA, refPolyClosed);
+			}
 
-		// first click on the frame
-		if (refCenter != null) {
-			g.fillArc(refCenter.x - 2, refCenter.y - 2, 4, 4, 0, 360);
-			msg = "Center(" + refCenter.x + "," + refCenter.y + ")";
-			g.drawString(msg, refCenter.x - 20, refCenter.y - 20);
-		}
-		// The first click after our reference polygon is drawn to draw another polygon
-		if (tCenter != null) {
-			g.fillArc(tCenter.x - 2, tCenter.y - 2, 4, 4, 0, 360);
+			drawPolygon(targetPolygon, g, Color.BLUE, targetPolyClosed);
+
+			drawPolygon(refPolygon, g, Color.MAGENTA, refPolyClosed);
+
+			// first click on the frame
+			if (refCenter != null) {
+				g.fillArc(refCenter.x - 2, refCenter.y - 2, 4, 4, 0, 360);
+				msg = "Center(" + refCenter.x + "," + refCenter.y + ")";
+				g.drawString(msg, refCenter.x - 20, refCenter.y - 20);
+			}
+			// The first click after our reference polygon is drawn to draw
+			// another
+			// polygon
+			if (tCenter != null) {
+				g.fillArc(tCenter.x - 2, tCenter.y - 2, 4, 4, 0, 360);
+				msg = "Center(" + tCenter.x + "," + tCenter.y + ")";
+				g.drawString(msg, tCenter.x - 20, tCenter.y - 20);
+			}
+
+			drawReferenceLines(refPolygon, g);
 		}
 
-		
-		drawReferenceLines(g);
 	}
 
 	// Draw different points on the polygon on every mouse click
@@ -99,66 +105,74 @@ class CvMorphing extends Canvas implements MouseListener {
 					g.drawArc(p.xpoints[i] - 5, p.ypoints[i] - 5, 10, 10, 0, 360);
 
 				}
-				//start connecting the points of polygon
+				// start connecting the points of polygon
 				if (i > 0)
 
 					g.drawLine(p.xpoints[i - 1], p.ypoints[i - 1], p.xpoints[i], p.ypoints[i]);
 
 			}
-		}
-		else
-		{
-			g.fillPolygon(p);  //after polygon is closed, fill the shape with the desired color
+		} else {
+			g.drawPolygon(p);
+			// g.fillPolygon(p);//after polygon is closed, fill the shape with
+			// the desired color
 		}
 		g.setColor(orgColor);
 	}
 
-	
-	//This handles drawing reference lines on the polygon with respect to the polygon point and Center
-	//Two reference line were drawn one in the direction of Center and first polygon point
-	// Another in the perpendicular direction of the reference polygon first point.
-	private void drawReferenceLines(Graphics g) {
+	// This handles drawing reference lines on the polygon with respect to the
+	// polygon point and Center
+	// Two reference line were drawn one in the direction of Center and first
+	// polygon point
+	// Another in the perpendicular direction of the reference polygon first
+	// point.
+	private void drawReferenceLines(Polygon p, Graphics g) {
 		int npoints;
 
 		if (refCenter != null) {
-			if (refPolygon.npoints > 0) {
-				npoints = refPolygon.npoints - 1;
+			if (p.npoints > 0) {
+				npoints = p.npoints - 1;
 				// After the polygon gets closed draw a reference line from the
 				// center.
-				
-				// This calculates the distance bewteen the center of the reference polygon and its point.
-				distanceRefrence = Math.sqrt(((refPolygon.xpoints[npoints] - refCenter.x)
-						* (refPolygon.xpoints[npoints] - refCenter.y))
-						+ ((refPolygon.ypoints[npoints] - refCenter.y) * (refPolygon.ypoints[npoints] - refCenter.y)));
+
+				// This calculates the distance between the center of the
+				// reference polygon and its point.
+				distanceRefrence = Math.sqrt(((p.xpoints[npoints] - refCenter.x) * (p.xpoints[npoints] - refCenter.y))
+						+ ((p.ypoints[npoints] - refCenter.y) * (p.ypoints[npoints] - refCenter.y)));
 
 				// unit vector of reference line
 				vRefLinePoint = new Point();
 				hRefLinePoint = new Point();
-				
-				//direction  of line from center of reference polygon to the first polygon point
-				dirCP.x = (float) (((refPolygon.xpoints[npoints] - refCenter.x) / distanceRefrence));
-				dirCP.y = (float) (((refPolygon.ypoints[npoints] - refCenter.y) / distanceRefrence));
+				Point2D dirCP = new Point2D(); // point to find the vector for
+												// the reference
+				// line
 
-				// To draw horizontal and vertical refrence line points with respect to the polygon vertex
-				vRefLinePoint.x = Math.round((float) (refPolygon.xpoints[npoints] + distanceRefrence * dirCP.x));
-				vRefLinePoint.y = Math.round((float) (refPolygon.ypoints[npoints] + distanceRefrence * dirCP.y));
+				// direction of line from center of reference polygon to the
+				// first polygon point
+				dirCP.x = (float) (((p.xpoints[npoints] - refCenter.x) / distanceRefrence));
+				dirCP.y = (float) (((p.ypoints[npoints] - refCenter.y) / distanceRefrence));
 
-				hRefLinePoint.x = Math.round((float) (refPolygon.xpoints[npoints] + distanceRefrence * dirCP.y));
-				hRefLinePoint.y = Math.round((float) (refPolygon.ypoints[npoints] - distanceRefrence * dirCP.x));
+				// To draw horizontal and vertical reference line points with
+				// respect to the polygon vertex
+				vRefLinePoint.x = Math.round((float) (p.xpoints[npoints] + distanceRefrence * dirCP.x));
+				vRefLinePoint.y = Math.round((float) (p.ypoints[npoints] + distanceRefrence * dirCP.y));
 
-				// Draw a reference line from the  Center to  reference polygon
+				hRefLinePoint.x = Math.round((float) (p.xpoints[npoints] + distanceRefrence * dirCP.y));
+				hRefLinePoint.y = Math.round((float) (p.ypoints[npoints] - distanceRefrence * dirCP.x));
+
+				// Draw a reference line from the Center to reference polygon
 				g.setColor(Color.red);
 				g.drawLine(refCenter.x, refCenter.y, vRefLinePoint.x, vRefLinePoint.y);
-				g.drawLine(hRefLinePoint.x, hRefLinePoint.y, refPolygon.xpoints[npoints], refPolygon.ypoints[npoints]);
+				g.drawLine(hRefLinePoint.x, hRefLinePoint.y, p.xpoints[npoints], refPolygon.ypoints[npoints]);
 
 			}
 		}
 	}
 
-	//This condition checks weather the clicked point is valid to form a star shaped polygon
-	
+	// This condition checks weather the clicked point is valid to form a star
+	// shaped polygon
+
 	private boolean isPointValid(Polygon p, Point c, Point t) {
-		int npoints = p.npoints-1;
+		int npoints = p.npoints - 1;
 		boolean result;
 		Point2D X = new Point2D();
 		Point2D dir = new Point2D();
@@ -167,15 +181,13 @@ class CvMorphing extends Canvas implements MouseListener {
 		if (p.npoints == 0)
 			return true;
 		else {
-			
-			dist = (float) Math.sqrt(((p.xpoints[npoints] - c.x)
-					* (p.xpoints[npoints] - c.y))
+
+			dist = (float) Math.sqrt(((p.xpoints[npoints] - c.x) * (p.xpoints[npoints] - c.y))
 					+ ((p.ypoints[npoints] - c.y) * (p.ypoints[npoints] - c.y)));
 
-			
 			dir.x = (float) (((p.xpoints[npoints] - c.x) / dist));
 			dir.y = (float) (((p.ypoints[npoints] - c.y) / dist));
-			
+
 			float d = (t.x - c.x) * (c.y - p.ypoints[npoints]) - (c.y - t.y) * (p.xpoints[npoints] - c.x);
 			// float PerpDistance2 =
 			if (d > 0)
@@ -208,8 +220,8 @@ class CvMorphing extends Canvas implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
-		
-		MouseClicked = true; 
+
+		MouseClicked = true;
 		if (refCenter == null) {
 			refCenter = new Point(event.getX(), event.getY());
 		}
@@ -247,6 +259,17 @@ class CvMorphing extends Canvas implements MouseListener {
 		}
 
 		repaint();
+
+	}
+
+	private void startAnimation() {
+		MorphablePolygon mPoly = new MorphablePolygon();
+		mPoly.setPoints(targetPolygon, tCenter, refPolygon, refCenter);
+		morphAnim = new MorphAnimation(this.getGraphics(), this);
+		morphAnim.setMaxSteps(200);
+		morphAnim.setMorphablePolygon(mPoly);
+		Thread t = new Thread(morphAnim);
+		t.start();
 
 	}
 
