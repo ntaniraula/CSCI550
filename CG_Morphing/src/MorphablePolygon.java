@@ -132,7 +132,46 @@ public class MorphablePolygon {
 	}
 	
 	private void setProjections() {
-		//for (int i = 0; i < points.size(); 
+		for (int i = 0; i < points.size(); i++) {
+			MorphablePoint mp = points.get(i);
+			if (mp.stateA == null || mp.stateB == null) {
+				boolean baseIsStateA = mp.stateA != null;
+				
+				if (baseIsStateA) {
+					mp.stateB = getIntersection(
+						getNeighbor(i, false), getNeighbor(i, true),
+						center, mp.stateA);
+				} else {
+					mp.stateA = getIntersection(
+						getNeighbor(i, false), getNeighbor(i, true),
+						center, mp.stateB);
+				}
+				points.set(i, mp);
+			}
+		}
+	}
+	
+	private Point getNeighbor(int index, boolean down) {
+		int counter = 0;
+		int increment = down ? 1 : -1;
+		int position = index;
+		
+		boolean baseIsStateA = points.get(index).stateA != null;
+		
+		while (counter < points.size()) {
+			position += increment;
+			if (position < 0) position = points.size() - 1;
+			if (position >= points.size()) position = 0;
+			
+			if (baseIsStateA && points.get(position).stateB != null)
+				return points.get(position).stateB;
+			if (!baseIsStateA && points.get(position).stateA != null)
+				return points.get(position).stateA;
+				
+			counter++;
+		}
+		
+		return center; //fallback to center
 	}
 	
 	private Point getIntersection(Point a1, Point a2, Point b1, Point b2) {
