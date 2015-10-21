@@ -29,11 +29,11 @@ public class MorphablePolygon {
 		
 		//Merge points
 		points = new ArrayList<MorphablePoint>();
-		for (int i = 0; i < pA.xpoints.length; i++) {
+		for (int i = 0; i < pA.npoints; i++) {
 			points.add(new MorphablePoint(
 				new Point(pA.xpoints[i], pA.ypoints[i]), null));
 		}
-		for (int i = 0; i < pB.xpoints.length; i++) {
+		for (int i = 0; i < pB.npoints; i++) {
 			points.add(new MorphablePoint(
 				null, new Point(pB.xpoints[i] - xDiff, pB.ypoints[i] - yDiff)));
 		}
