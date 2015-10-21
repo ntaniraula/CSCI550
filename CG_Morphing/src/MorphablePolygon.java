@@ -7,7 +7,7 @@ public class MorphablePolygon {
 	public ArrayList<MorphablePoint> points;
 	public Point center;
 	
-	public MorphablePolygon() {}
+	public MorphablePolygon() { points = new ArrayList<MorphablePoint>(); }
 	public MorphablePolygon(ArrayList<MorphablePoint> points) {
 		this.points = points;
 	}
@@ -28,17 +28,30 @@ public class MorphablePolygon {
 		Point2D basePoint = new Point2D(pA.xpoints[0], pA.ypoints[0]);
 		
 		//Merge points
+		points = new ArrayList<MorphablePoint>();
 		for (int i = 0; i < pA.xpoints.length; i++) {
 			points.add(new MorphablePoint(
 				new Point(pA.xpoints[i], pA.ypoints[i]), null));
 		}
 		for (int i = 0; i < pB.xpoints.length; i++) {
 			points.add(new MorphablePoint(
-				null, new Point(pA.xpoints[i] - xDiff, pA.ypoints[i] - yDiff)));
+				null, new Point(pB.xpoints[i] - xDiff, pB.ypoints[i] - yDiff)));
 		}
 		
 		sortPoints();
 		setProjections();
+		
+		//Debugging
+		System.out.println("Size: " + Integer.toString(points.size()));
+		for (int i = 0; i < points.size(); i++) {
+			MorphablePoint p = points.get(i);
+			System.out.println("index : " + Integer.toString(i) +
+				" [(" + (p.stateA != null 
+					? Integer.toString(p.stateA.x) + ", " + Integer.toString(p.stateA.y) : "NULL") +
+				"),(" + (p.stateB != null 
+					? Integer.toString(p.stateB.x) + ", " + Integer.toString(p.stateB.y) : "NULL") +
+				")]");
+		}
 	}
 	
 	//get the transition polygon between stateA & stateB
