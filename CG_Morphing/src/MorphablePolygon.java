@@ -34,10 +34,11 @@ public class MorphablePolygon {
 		}
 		for (int i = 0; i < pB.xpoints.length; i++) {
 			points.add(new MorphablePoint(
-				null, new Point2D(pA.xpoints[i], pA.ypoints[i])));
+				null, new Point2D(pA.xpoints[i] - xDiff, pA.ypoints[i] - yDiff)));
 		}
 		
 		sortPoints();
+		setProjections();
 	}
 	
 	//get the transition polygon between stateA & stateB
@@ -128,5 +129,14 @@ public class MorphablePolygon {
 			
 		points.set(index1, newPoint);
 		points.remove(index2);
+	}
+	
+	private void setProjections() {
+		//TODO
+	}
+	
+	private Point2D getIntersection(Point2D a1, Point2D a2, Point2D b1, Point2D b2) {
+		//TODO
+		return new Point2D();
 	}
 }
