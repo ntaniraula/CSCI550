@@ -27,24 +27,17 @@ public class MorphablePolygon {
 		//set the first element of pA as reference point
 		Point2D basePoint = new Point2D(pA.xpoints[0], pA.ypoints[0]);
 		
-		//TODO!
-		//temporary logic
+		//Merge points
 		for (int i = 0; i < pA.xpoints.length; i++) {
 			points.add(new MorphablePoint(
-				new Point2D(pA.xpoints[i], pA.ypoints[i]),
-				new Point2D(0, 0)));
+				new Point2D(pA.xpoints[i], pA.ypoints[i]), null));
 		}
 		for (int i = 0; i < pB.xpoints.length; i++) {
-			if (i >= pA.xpoints.length)
-				points.add(new MorphablePoint(
-					new Point2D(pB.xpoints[i], pB.ypoints[i]),
-					new Point2D(pB.xpoints[i], pB.ypoints[i])));
-			else
-				points.add(i, new MorphablePoint(
-					new Point2D(pA.xpoints[i], pA.ypoints[i]),
-					new Point2D(pB.xpoints[i], pB.ypoints[i])));
+			points.add(new MorphablePoint(
+				null, new Point2D(pA.xpoints[i], pA.ypoints[i])));
 		}
-		//temporary logic - END
+		
+		sortPoints();
 	}
 	
 	//get the transition polygon between stateA & stateB
@@ -72,10 +65,17 @@ public class MorphablePolygon {
 	
 	//check whether a point is in a less position relative
 	//to the center in a counter clockwise direction
-	private int pointCcwLess(Point2D p1, Point2D p2) {
+	private int pointCcwLess(MorphablePoint m1, MorphablePoint m2) {
 		int isTrue   =  1;
 		int isFalse  = -1;
 		int areEqual =  0;
+		
+		Point2D p1 = m1.stateA != null 
+			? new Point2D(m1.stateA.x, m1.stateA.y) 
+			: new Point2D(m1.stateB.x, m1.stateB.y);
+		Point2D p2 = m2.stateA != null 
+			? new Point2D(m2.stateA.x, m2.stateA.y) 
+			: new Point2D(m2.stateB.x, m2.stateB.y);
 	
 		if (p1.x - center.x >= 0 && p2.x - center.x < 0)
 			return isTrue;
@@ -95,5 +95,38 @@ public class MorphablePolygon {
 		
 		//p1 & p2 are on the same line from the center
 		return areEqual;
+	}
+	
+	private void sortPoints() {
+		boolean swapped;
+		do {
+			swapped = false;
+			for (int i = 1; i < points.size() - 1; i++) {
+				int isLess = pointCcwLess(points.get(i-1), points.get(i));
+				if (isLess == -1) {
+					swapPoints(i-1, i);
+					swapped = true;
+				} else if (isLess == 0) { //the points are in the same centerline
+					mergePoints(i-1, i);
+				}
+			}			
+		} while (!swapped);
+	}
+	
+	private void swapPoints(int index1, int index2) {
+		MorphablePoint temp = points.get(index1);
+		points.set(index1, points.get(index2));
+		points.set(index2, temp);
+	}
+	
+	private void mergePoints(int index1, int index2) {
+		MorphablePoint newPoint = new MorphablePoint();
+		newPoint.stateA = null != points.get(index1).stateA
+			? points.get(index1).stateA : points.get(index2).stateA;
+		newPoint.stateB = null != points.get(index1).stateB
+			? points.get(index1).stateB : points.get(index2).stateB;
+			
+		points.set(index1, newPoint);
+		points.remove(index2);
 	}
 }
