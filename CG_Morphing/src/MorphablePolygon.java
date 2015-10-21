@@ -38,20 +38,21 @@ public class MorphablePolygon {
 				null, new Point(pB.xpoints[i] - xDiff, pB.ypoints[i] - yDiff)));
 		}
 		
+		System.out.println("initial");
+		printPoints();
+		System.out.println();
+		
 		sortPoints();
+		
+		System.out.println("after sort");
+		printPoints();
+		System.out.println();
+		
 		setProjections();
 		
-		//Debugging
-		System.out.println("Size: " + Integer.toString(points.size()));
-		for (int i = 0; i < points.size(); i++) {
-			MorphablePoint p = points.get(i);
-			System.out.println("index : " + Integer.toString(i) +
-				" [(" + (p.stateA != null 
-					? Integer.toString(p.stateA.x) + ", " + Integer.toString(p.stateA.y) : "NULL") +
-				"),(" + (p.stateB != null 
-					? Integer.toString(p.stateB.x) + ", " + Integer.toString(p.stateB.y) : "NULL") +
-				")]");
-		}
+		System.out.println("after projection");
+		printPoints();
+		System.out.println();
 	}
 	
 	//get the transition polygon between stateA & stateB
@@ -203,5 +204,18 @@ public class MorphablePolygon {
 		return new Point(
 			Math.round((rA - rB)/(dA - dB)),
 			Math.round(((dA * rB) - (dB * rB))/(dB - dA)));
+	}
+	
+	private void printPoints() {
+		System.out.println("Size: " + Integer.toString(points.size()));
+		for (int i = 0; i < points.size(); i++) {
+			MorphablePoint p = points.get(i);
+			System.out.println("index : " + Integer.toString(i) +
+				" [(" + (p.stateA != null 
+					? Integer.toString(p.stateA.x) + ", " + Integer.toString(p.stateA.y) : "NULL") +
+				"),(" + (p.stateB != null 
+					? Integer.toString(p.stateB.x) + ", " + Integer.toString(p.stateB.y) : "NULL") +
+				")]");
+		}
 	}
 }
