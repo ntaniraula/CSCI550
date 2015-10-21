@@ -1,11 +1,13 @@
+import java.awt.Point;
+
 //class to represent a morphable points
 //for now, let it only be able to represent 2 states: stateA & stateB
 public class MorphablePoint {
-	public Point2D stateA;
-	public Point2D stateB;
+	public Point stateA;
+	public Point stateB;
 	
 	public MorphablePoint() {}
-	public MorphablePoint(Point2D stateA, Point2D stateB) {
+	public MorphablePoint(Point stateA, Point stateB) {
 		this.stateA = stateA;
 		this.stateB = stateB;
 	}
@@ -43,12 +45,12 @@ public class MorphablePoint {
 	//              step maxSteps + 1 == exactly at stateA
 	//toStateA : the direction of the transition.
 	//           true if it's going from stateB to stateA, false otherwise.
-	public Point2D transitionPoint(int maxSteps, int step, boolean toStateA) {
+	public Point transitionPoint(int maxSteps, int step, boolean toStateA) {
 		float unitDistance = (maxSteps + 1)/distance();
-		Point2D originState = toStateA ? stateA : stateB;
+		Point originState = toStateA ? stateA : stateB;
 		
-		float tX = originState.x + step * unitVector(toStateA).x * unitDistance;
-		float tY = originState.y + step * unitVector(toStateA).y * unitDistance;
-		return new Point2D(tX, tY);
+		int tX = Math.round(originState.x + step * unitVector(toStateA).x * unitDistance);
+		int tY = Math.round(originState.y + step * unitVector(toStateA).y * unitDistance);
+		return new Point(tX, tY);
 	}
 }

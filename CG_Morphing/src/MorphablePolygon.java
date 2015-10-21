@@ -21,8 +21,8 @@ public class MorphablePolygon {
 	//cA & cB = center of polygon A & B respectively
 	public void setPoints(Polygon pA, Point cA, Polygon pB, Point cB) {
 		center = new Point(cA.x, cA.y); //set pA's center as the polygon's center
-		float xDiff = cB.x - cA.x;
-		float yDiff = cB.y - cA.y;
+		int xDiff = cB.x - cA.x;
+		int yDiff = cB.y - cA.y;
 	
 		//set the first element of pA as reference point
 		Point2D basePoint = new Point2D(pA.xpoints[0], pA.ypoints[0]);
@@ -30,11 +30,11 @@ public class MorphablePolygon {
 		//Merge points
 		for (int i = 0; i < pA.xpoints.length; i++) {
 			points.add(new MorphablePoint(
-				new Point2D(pA.xpoints[i], pA.ypoints[i]), null));
+				new Point(pA.xpoints[i], pA.ypoints[i]), null));
 		}
 		for (int i = 0; i < pB.xpoints.length; i++) {
 			points.add(new MorphablePoint(
-				null, new Point2D(pA.xpoints[i] - xDiff, pA.ypoints[i] - yDiff)));
+				null, new Point(pA.xpoints[i] - xDiff, pA.ypoints[i] - yDiff)));
 		}
 		
 		sortPoints();
@@ -54,7 +54,7 @@ public class MorphablePolygon {
 		
 		if (null != points && points.size() > 0) {
 			for (int i = 0; i < points.size(); i++) {
-				Point2D tPoint = points.get(i)
+				Point tPoint = points.get(i)
 					.transitionPoint(maxSteps, step, toStateA);
 				tPolygon.addPoint(
 					Math.round(tPoint.x), Math.round(tPoint.y));
@@ -132,11 +132,24 @@ public class MorphablePolygon {
 	}
 	
 	private void setProjections() {
-		//TODO
+		//for (int i = 0; i < points.size(); 
 	}
 	
-	private Point2D getIntersection(Point2D a1, Point2D a2, Point2D b1, Point2D b2) {
-		//TODO
-		return new Point2D();
+	private Point getIntersection(Point a1, Point a2, Point b1, Point b2) {
+		MorphablePoint mA = new MorphablePoint(a1, a2);
+		MorphablePoint mB = new MorphablePoint(b1, b2);
+		
+		Point2D uVA = mA.unitVector(false);
+		Point2D uVB = mB.unitVector(false);
+		
+		float dA = uVA.y/uVA.x;
+		float rA = dA * a1.x - a1.y;
+		
+		float dB = uVB.y/uVB.x;
+		float rB = dB * b1.x - b1.y;
+		
+		return new Point(
+			Math.round((rA - rB)/(dA - dB)),
+			Math.round(((dA * rB) - (dB * rB))/(dB - dA)));
 	}
 }
