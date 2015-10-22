@@ -10,7 +10,9 @@ import java.awt.Polygon.*;
 
 public class Morphing extends JFrame {
 	public static void main(String args[]) {
-		Morphing m = new Morphing();
+		int maxSteps = args.length > 0 && args[0] != null ? Integer.parseInt(args[0]) : 5; //default's to 5
+	
+		Morphing m = new Morphing(maxSteps);
 		m.setVisible(true);
 		m.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
@@ -19,10 +21,10 @@ public class Morphing extends JFrame {
 		});
 	}
 
-	public Morphing() {
+	public Morphing(int maxSteps) {
 		setTitle("Morphing a Polygon");
 		setSize(800, 400);
-		add("Center", new CvMorphing());
+		add("Center", new CvMorphing(maxSteps));
 
 	}
 }
@@ -48,11 +50,12 @@ class CvMorphing extends Canvas implements MouseListener {
 	int stepsCounter;
 	int increment;
 
-	public CvMorphing() {
-		maxSteps = 5;
-		stepsCounter = 0;
-		increment = 1;
-		morphPolygon = null;
+	public CvMorphing(int maxSteps) {
+		this.maxSteps = maxSteps;
+		
+		this.stepsCounter = 0;
+		this.increment = 1;
+		this.morphPolygon = null;
 		this.addMouseListener(this);
 	}
 
@@ -71,8 +74,10 @@ class CvMorphing extends Canvas implements MouseListener {
 			
 			float xUnit = (tCenter.x - refCenter.x)/(maxSteps + 1);
 			float yUnit = (tCenter.y - refCenter.y)/(maxSteps + 1);
-			int xDiff = Math.round((tCenter.x - refCenter.x) - stepsCounter * xUnit);
-			int yDiff = Math.round((tCenter.y - refCenter.y) - stepsCounter * yUnit);
+			int xDiff = stepsCounter == maxSteps + 1 ? 0
+				: Math.round((tCenter.x - refCenter.x) - stepsCounter * xUnit);
+			int yDiff = stepsCounter == maxSteps + 1 ? 0
+				: Math.round((tCenter.y - refCenter.y) - stepsCounter * yUnit);
 			Polygon transitionPolygon = morphPolygon.transitionPolygon(
 				maxSteps, stepsCounter, true);
 			
