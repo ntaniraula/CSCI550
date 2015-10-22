@@ -43,8 +43,15 @@ class CvMorphing extends Canvas implements MouseListener {
 	Point hRefLinePoint, vRefLinePoint;
 
 	MorphAnimation morphAnim;
+	MorphablePolygon morphPolygon;
+	
+	int maxSteps;
+	int stepsCounter;
 
 	public CvMorphing() {
+		maxSteps = 5;
+		stepsCounter = 0;
+		morphPolygon = null;
 		this.addMouseListener(this);
 	}
 
@@ -54,7 +61,34 @@ class CvMorphing extends Canvas implements MouseListener {
 		if (refPolyClosed && targetPolyClosed) {
 			//g.setColor(Color.white);
 			//g.fillRect(0, 0, d.width, d.height);
-			startAnimation();
+			//startAnimation();
+			if (null == morphPolygon)
+				morphPolygon = new MorphablePolygon(refPolygon, refCenter, targetPolygon, tCenter);
+			
+			drawPolygon(targetPolygon, g, Color.BLUE, targetPolyClosed);
+			drawPolygon(refPolygon, g, Color.MAGENTA, refPolyClosed);
+			
+			float xUnit = (tCenter.x - refCenter.x)/(maxSteps + 1);
+			float yUnit = (tCenter.y - refCenter.y)/(maxSteps + 1);
+			int xDiff = Math.round((tCenter.x - refCenter.x) - stepsCounter * xUnit);
+			int yDiff = Math.round((tCenter.y - refCenter.y) - stepsCounter * yUnit);
+			Polygon transitionPolygon = morphPolygon.transitionPolygon(
+				maxSteps, stepsCounter, true);
+			
+			//Adjust the distance
+			for (int i = 0; i < transitionPolygon.npoints; i++) {
+				transitionPolygon.xpoints[i] = transitionPolygon.xpoints[i] + xDiff;
+				transitionPolygon.ypoints[i] = transitionPolygon.ypoints[i] + yDiff;
+				
+				System.out.println("TRANSITION POLYGON");
+				System.out.println("index: " + Integer.toString(i)
+					+ " (" + Integer.toString(transitionPolygon.xpoints[i])
+					+ ", " + Integer.toString(transitionPolygon.ypoints[i]));
+			}
+			
+			drawPolygon(transitionPolygon, g, Color.GREEN, true);
+			stepsCounter = stepsCounter < maxSteps + 1
+				? stepsCounter + 1 : maxSteps + 1;
 		} else {
 			if (!MouseClicked) {
 				msg = "Please Click to start";

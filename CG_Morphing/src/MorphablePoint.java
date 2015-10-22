@@ -49,7 +49,7 @@ public class MorphablePoint {
 		float xUnit = (stateA.x - stateB.x)/(maxSteps + 1);
 		float yUnit = (stateA.y - stateB.y)/(maxSteps + 1);
 		int direction = toStateA ? 1 : -1;
-		Point originState = toStateA ? stateA : stateB;
+		Point originState = toStateA ? stateB : stateA;
 		
 		int tX = Math.round(originState.x + step * direction * xUnit);
 		int tY = Math.round(originState.y + step * direction * yUnit);
