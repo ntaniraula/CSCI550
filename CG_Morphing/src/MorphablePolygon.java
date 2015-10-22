@@ -147,7 +147,13 @@ public class MorphablePolygon {
 		return center; //fallback to center
 	}
 	
-	public Point getIntersection(Point a1, Point a2, Point b1, Point b2) {
+	public Point getIntersection(Point a1, Point a2, Point bO1, Point bO2) {
+		//extend line b
+		int bXDiff = bO2.x - bO1.x;
+		int bYDiff = bO2.y - bO1.y;
+		Point b1 = new Point(bO1.x, bO1.y);
+		Point b2 = new Point(bO2.x + 5 * bXDiff, bO2.y + 5 * bYDiff);
+	
 		float d = (b2.y - b1.y) * (a2.x - a1.x) - (b2.x - b1.x) * (a2.y - a1.y);
 		if (d == 0.0f) return null; //lines are parallel
 		
@@ -192,6 +198,7 @@ public class MorphablePolygon {
 	}
 	
 	private void printPoints() {
+		System.out.println("CURRENT MORPHABLE POLYGON");
 		System.out.println("Size: " + Integer.toString(points.size()));
 		for (int i = 0; i < points.size(); i++) {
 			MorphablePoint p = points.get(i);

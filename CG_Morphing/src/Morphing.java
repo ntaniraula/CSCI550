@@ -10,7 +10,6 @@ import java.awt.Polygon.*;
 
 public class Morphing extends JFrame {
 	public static void main(String args[]) {
-
 		Morphing m = new Morphing();
 		m.setVisible(true);
 		m.addWindowListener(new WindowAdapter() {
@@ -81,16 +80,9 @@ class CvMorphing extends Canvas implements MouseListener {
 			for (int i = 0; i < transitionPolygon.npoints; i++) {
 				transitionPolygon.xpoints[i] = transitionPolygon.xpoints[i] + xDiff;
 				transitionPolygon.ypoints[i] = transitionPolygon.ypoints[i] + yDiff;
-				
-				System.out.println("TRANSITION POLYGON");
-				System.out.println("index: " + Integer.toString(i)
-					+ " (" + Integer.toString(transitionPolygon.xpoints[i])
-					+ ", " + Integer.toString(transitionPolygon.ypoints[i]));
 			}
 			
 			drawPolygon(transitionPolygon, g, Color.GREEN, true);
-			//stepsCounter = stepsCounter < maxSteps + 1
-			//	? stepsCounter + 1 : maxSteps + 1;
 			stepsCounter += increment;
 			if (stepsCounter == maxSteps + 1) increment = -1;
 			if (stepsCounter == 0) increment = 1;
