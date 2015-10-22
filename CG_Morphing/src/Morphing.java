@@ -47,10 +47,12 @@ class CvMorphing extends Canvas implements MouseListener {
 	
 	int maxSteps;
 	int stepsCounter;
+	int increment;
 
 	public CvMorphing() {
 		maxSteps = 5;
 		stepsCounter = 0;
+		increment = 1;
 		morphPolygon = null;
 		this.addMouseListener(this);
 	}
@@ -87,8 +89,11 @@ class CvMorphing extends Canvas implements MouseListener {
 			}
 			
 			drawPolygon(transitionPolygon, g, Color.GREEN, true);
-			stepsCounter = stepsCounter < maxSteps + 1
-				? stepsCounter + 1 : maxSteps + 1;
+			//stepsCounter = stepsCounter < maxSteps + 1
+			//	? stepsCounter + 1 : maxSteps + 1;
+			stepsCounter += increment;
+			if (stepsCounter == maxSteps + 1) increment = -1;
+			if (stepsCounter == 0) increment = 1;
 		} else {
 			if (!MouseClicked) {
 				msg = "Please Click to start";
