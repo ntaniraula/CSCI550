@@ -38,17 +38,51 @@ public class MorphablePolygon {
 				null, new Point(pB.xpoints[i] - xDiff, pB.ypoints[i] - yDiff)));
 		}
 		
+		//Test
+		center = new Point(200, 200);
+		points = new ArrayList<MorphablePoint>();
+		points.add(new MorphablePoint(new Point(300, 300), null));
+		points.add(new MorphablePoint(new Point(300, 100), null));
+		points.add(new MorphablePoint(new Point(100, 100), null));
+		points.add(new MorphablePoint(new Point(100, 300), null));
+		points.add(new MorphablePoint(null, new Point(400, 200)));
+		points.add(new MorphablePoint(null, new Point(200, 0  )));
+		points.add(new MorphablePoint(null, new Point(0  , 200)));
+		points.add(new MorphablePoint(null, new Point(200, 400)));
+		
 		System.out.println("initial");
 		printPoints();
 		System.out.println();
 		
 		sortPoints();
 		
+		//Test
+		//points = new ArrayList<MorphablePoint>();
+		//points.add(new MorphablePoint(new Point(300, 300), null));
+		//points.add(new MorphablePoint(null, new Point(400, 200)));
+		//points.add(new MorphablePoint(new Point(300, 100), null));
+		//points.add(new MorphablePoint(null, new Point(200, 0  )));
+		//points.add(new MorphablePoint(new Point(100, 100), null));
+		//points.add(new MorphablePoint(null, new Point(0  , 200)));
+		//points.add(new MorphablePoint(new Point(100, 300), null));
+		//points.add(new MorphablePoint(null, new Point(200, 400)));
+		
 		System.out.println("after sort");
 		printPoints();
 		System.out.println();
 		
 		setProjections();
+		
+		//Test
+		points = new ArrayList<MorphablePoint>();
+		points.add(new MorphablePoint(new Point(300, 300), new Point(250, 250)));
+		points.add(new MorphablePoint(new Point(300, 200), new Point(400, 200)));
+		points.add(new MorphablePoint(new Point(300, 100), new Point(250, 150)));
+		points.add(new MorphablePoint(new Point(200, 100), new Point(200, 0  )));
+		points.add(new MorphablePoint(new Point(100, 100), new Point(150, 150)));
+		points.add(new MorphablePoint(new Point(100, 200), new Point(0  , 200)));
+		points.add(new MorphablePoint(new Point(100, 300), new Point(150, 250)));
+		points.add(new MorphablePoint(new Point(100, 200), new Point(200, 400)));
 		
 		System.out.println("after projection");
 		printPoints();
@@ -80,7 +114,7 @@ public class MorphablePolygon {
 	
 	//check whether a point is in a less position relative
 	//to the center in a counter clockwise direction
-	private int pointCcwLess(MorphablePoint m1, MorphablePoint m2) {
+	public int pointCcwLess(MorphablePoint m1, MorphablePoint m2) {
 		int isTrue   =  1;
 		int isFalse  = -1;
 		int areEqual =  0;
@@ -98,27 +132,27 @@ public class MorphablePolygon {
 			return isFalse;
 		if (p1.x - center.x == 0 && p2.x - center.x == 0) {
 			if (p1.y - center.y >= 0 || p2.y - center.y >= 0)
-				return p1.y > p2.y ? isTrue : isFalse;
-			return p2.y > p1.y ? isTrue : isFalse;
+				return p1.y > p2.y ? isFalse : isTrue;
+			return p2.y > p1.y ? isFalse : isTrue;
 		}
 		
 		//get determinant
 		float det = ((p1.x - center.x) * (p2.y - center.y)) -
 			((p2.x - center.x) * (p1.y - center.y));
-		if (det < 0) return isTrue;
-		if (det > 0) return isFalse;
+		if (det < 0) return isFalse;
+		if (det > 0) return isTrue;
 		
 		//p1 & p2 are on the same line from the center
 		return areEqual;
 	}
 	
-	private void sortPoints() {
+	public void sortPoints() {
 		boolean swapped;
 		do {
 			swapped = false;
 			for (int i = 1; i < points.size() - 1; i++) {
 				int isLess = pointCcwLess(points.get(i-1), points.get(i));
-				if (isLess == -1) {
+				if (isLess == 1) {
 					swapPoints(i-1, i);
 					swapped = true;
 				} else if (isLess == 0) { //the points are in the same centerline
@@ -128,13 +162,13 @@ public class MorphablePolygon {
 		} while (!swapped);
 	}
 	
-	private void swapPoints(int index1, int index2) {
+	public void swapPoints(int index1, int index2) {
 		MorphablePoint temp = points.get(index1);
 		points.set(index1, points.get(index2));
 		points.set(index2, temp);
 	}
 	
-	private void mergePoints(int index1, int index2) {
+	public void mergePoints(int index1, int index2) {
 		MorphablePoint newPoint = new MorphablePoint();
 		newPoint.stateA = null != points.get(index1).stateA
 			? points.get(index1).stateA : points.get(index2).stateA;
@@ -145,7 +179,7 @@ public class MorphablePolygon {
 		points.remove(index2);
 	}
 	
-	private void setProjections() {
+	public void setProjections() {
 		for (int i = 0; i < points.size(); i++) {
 			MorphablePoint mp = points.get(i);
 			if (mp.stateA == null || mp.stateB == null) {
@@ -165,7 +199,7 @@ public class MorphablePolygon {
 		}
 	}
 	
-	private Point getNeighbor(int index, boolean down) {
+	public Point getNeighbor(int index, boolean down) {
 		int counter = 0;
 		int increment = down ? 1 : -1;
 		int position = index;
@@ -188,7 +222,7 @@ public class MorphablePolygon {
 		return center; //fallback to center
 	}
 	
-	private Point getIntersection(Point a1, Point a2, Point b1, Point b2) {
+	public Point getIntersection(Point a1, Point a2, Point b1, Point b2) {
 		MorphablePoint mA = new MorphablePoint(a1, a2);
 		MorphablePoint mB = new MorphablePoint(b1, b2);
 		

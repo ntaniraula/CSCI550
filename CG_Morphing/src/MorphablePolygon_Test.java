@@ -1,0 +1,130 @@
+import java.awt.Point;
+
+public class MorphablePolygon_Test {
+	public static void main(String args[]) {
+		testPointCcwLess();
+		testSortPoints();
+		testSwapPoints();
+		testMergePoints();
+		testSetProjections();
+		testGetNeighbor();
+		testGetIntersection();
+	}
+	
+	static void testPointCcwLess() {
+		Point center;
+		MorphablePoint m1, m2;
+		int result;
+		
+		MorphablePolygon mPolygon = new MorphablePolygon();
+		System.out.println("Point Ccw Less Test");
+		
+		center = new Point(200, 200);
+		mPolygon.center = center;
+		
+		m1 = new MorphablePoint(new Point(300, 300), null);
+		m2 = new MorphablePoint(null, new Point(400, 200));
+		result = mPolygon.pointCcwLess(m1, m2);
+		System.out.println("m1    : " + m1.toString());
+		System.out.println("m2    : " + m2.toString());
+		System.out.println("result: " + Integer.toString(result));
+		
+		m1 = new MorphablePoint(new Point(300, 300), null);
+		m2 = new MorphablePoint(new Point(300, 100), null);
+		result = mPolygon.pointCcwLess(m1, m2);
+		System.out.println("m1    : " + m1.toString());
+		System.out.println("m2    : " + m2.toString());
+		System.out.println("result: " + Integer.toString(result));
+		
+		m1 = new MorphablePoint(new Point(300, 300), null);
+		m2 = new MorphablePoint(null, new Point(200, 0));
+		result = mPolygon.pointCcwLess(m1, m2);
+		System.out.println("m1    : " + m1.toString());
+		System.out.println("m2    : " + m2.toString());
+		System.out.println("result: " + Integer.toString(result));
+		
+		m1 = new MorphablePoint(new Point(300, 300), null);
+		m2 = new MorphablePoint(new Point(100, 100), null);
+		result = mPolygon.pointCcwLess(m1, m2);
+		System.out.println("m1    : " + m1.toString());
+		System.out.println("m2    : " + m2.toString());
+		System.out.println("result: " + Integer.toString(result));
+		
+		m1 = new MorphablePoint(new Point(300, 300), null);
+		m2 = new MorphablePoint(null, new Point(200, 400));
+		result = mPolygon.pointCcwLess(m1, m2);
+		System.out.println("m1    : " + m1.toString());
+		System.out.println("m2    : " + m2.toString());
+		System.out.println("result: " + Integer.toString(result));
+		
+		m1 = new MorphablePoint(new Point(300, 300), null);
+		m2 = new MorphablePoint(new Point(100, 300), null);
+		result = mPolygon.pointCcwLess(m1, m2);
+		System.out.println("m1    : " + m1.toString());
+		System.out.println("m2    : " + m2.toString());
+		System.out.println("result: " + Integer.toString(result));
+		
+		m1 = new MorphablePoint(new Point(300, 300), null);
+		m2 = new MorphablePoint(null, new Point(0, 200));
+		result = mPolygon.pointCcwLess(m1, m2);
+		System.out.println("m1    : " + m1.toString());
+		System.out.println("m2    : " + m2.toString());
+		System.out.println("result: " + Integer.toString(result));
+		
+		System.out.println();
+	}
+	
+	static void testSortPoints() {
+	}
+	
+	static void testSwapPoints() {
+	}
+	
+	static void testMergePoints() {
+	}
+	
+	static void testSetProjections() {
+	}
+	
+	static void testGetNeighbor() {
+	}
+	
+	static void testGetIntersection() {
+		Point a1, a2, b1, b2;
+		Point intersection;
+		
+		MorphablePolygon mPolygon = new MorphablePolygon();
+		System.out.println("Get Intersection Test");
+	
+		a1 = new Point(300, 100);
+		a2 = new Point(300, 300);
+		b1 = new Point(200, 200);
+		b2 = new Point(350, 200);
+		
+		intersection = mPolygon.getIntersection(a1, a2, b1, b2);
+		System.out.println(
+			"a1 : " + getPointString(a1)
+			+ " a2 : " + getPointString(a2)
+			+ " b1 : " + getPointString(b1)
+			+ " b2 : " + getPointString(b2));
+		System.out.println("Intersection: " + getPointString(intersection));
+		
+		System.out.println();
+	}
+	
+	static void printMorphablePolygon(MorphablePolygon mPolygon, String label) {
+		System.out.println("Size  : " + Integer.toString(mPolygon.points.size()));
+		System.out.println("Center: (" 
+			+ Integer.toString(mPolygon.center.x) + ", " 
+			+ Integer.toString(mPolygon.center.y) + ")"); 
+		for (int i = 0; i < mPolygon.points.size(); i++) {
+			System.out.println("Index : " + Integer.toString(i) + " " 
+				+ mPolygon.points.get(i).toString());
+		}
+	}
+	
+	//Tools
+	static String getPointString(Point p) {
+		return "(" + Integer.toString(p.x) + ", " + Integer.toString(p.y) + ")";
+	}
+}

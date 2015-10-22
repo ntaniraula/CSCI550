@@ -53,4 +53,13 @@ public class MorphablePoint {
 		int tY = Math.round(originState.y + step * unitVector(toStateA).y * unitDistance);
 		return new Point(tX, tY);
 	}
+	
+	public String toString() {
+		return 
+			"[("  + (stateA != null 
+				? Integer.toString(stateA.x) + ", " + Integer.toString(stateA.y) : "NULL") +
+			"),(" + (stateB != null 
+				? Integer.toString(stateB.x) + ", " + Integer.toString(stateB.y) : "NULL") +
+			")]";
+	}	
 }
