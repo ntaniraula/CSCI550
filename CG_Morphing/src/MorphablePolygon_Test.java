@@ -1,13 +1,28 @@
+import java.awt.*;
 import java.awt.Point;
+import java.awt.Polygon.*;
 import java.util.ArrayList;
 
 public class MorphablePolygon_Test {
 	public static void main(String args[]) {
+		testSetPoints();
+		testTransitionPolygon();
 		testPointCcwLess();
 		testSortPoints();
 		testSetProjections();
 		testGetNeighbor();
 		testGetIntersection();
+	}
+	
+	static void testSetPoints() {
+		Polygon p1, p2;
+		Point c1, c2;
+		
+		p1 = new Polygon();
+	}
+	
+	static void testTransitionPolygon() {
+		
 	}
 	
 	static void testPointCcwLess() {
