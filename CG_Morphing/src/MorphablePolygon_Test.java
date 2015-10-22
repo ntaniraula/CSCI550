@@ -115,13 +115,13 @@ public class MorphablePolygon_Test {
 		
 		center = new Point(200, 200);
 		points = new ArrayList<MorphablePoint>();
-		points.add(new MorphablePoint(null, new Point(0  , 200)));
+		points.add(new MorphablePoint(null, new Point(200,   0)));
 		points.add(new MorphablePoint(new Point(300, 100), null));
 		points.add(new MorphablePoint(null, new Point(400, 200)));
 		points.add(new MorphablePoint(new Point(300, 300), null));
 		points.add(new MorphablePoint(null, new Point(200, 400)));
 		points.add(new MorphablePoint(new Point(100, 300), null));
-		points.add(new MorphablePoint(null, new Point(200, 0  )));
+		points.add(new MorphablePoint(null, new Point(0  , 200)));
 		points.add(new MorphablePoint(new Point(100, 100), null));
 		
 		mPolygon.center = center;
@@ -144,13 +144,13 @@ public class MorphablePolygon_Test {
 		
 		center = new Point(200, 200);
 		points = new ArrayList<MorphablePoint>();
-		points.add(new MorphablePoint(null, new Point(0  , 200)));
+		points.add(new MorphablePoint(null, new Point(200,   0)));
 		points.add(new MorphablePoint(new Point(300, 100), null));
 		points.add(new MorphablePoint(null, new Point(400, 200)));
 		points.add(new MorphablePoint(new Point(300, 300), null));
 		points.add(new MorphablePoint(null, new Point(200, 400)));
 		points.add(new MorphablePoint(new Point(100, 300), null));
-		points.add(new MorphablePoint(null, new Point(200, 0  )));
+		points.add(new MorphablePoint(null, new Point(0  , 200)));
 		points.add(new MorphablePoint(new Point(100, 100), null));
 		
 		mPolygon.center = center;
@@ -200,6 +200,21 @@ public class MorphablePolygon_Test {
 			+ " b1 : " + getPointString(b1)
 			+ " b2 : " + getPointString(b2));
 		System.out.println("Intersection: " + getPointString(intersection));
+		System.out.println();
+		
+		a1 = new Point(100, 100);
+		a2 = new Point(100, 300);
+		b1 = new Point(200, 200);
+		b2 = new Point(0  , 200);
+		
+		intersection = mPolygon.getIntersection(a1, a2, b1, b2);
+		System.out.println(
+			"a1 : " + getPointString(a1)
+			+ " a2 : " + getPointString(a2)
+			+ " b1 : " + getPointString(b1)
+			+ " b2 : " + getPointString(b2));
+		System.out.println("Intersection: " + getPointString(intersection));
+		System.out.println();
 		
 		System.out.println();
 	}
@@ -217,6 +232,8 @@ public class MorphablePolygon_Test {
 	
 	//Tools
 	static String getPointString(Point p) {
-		return "(" + Integer.toString(p.x) + ", " + Integer.toString(p.y) + ")";
+		return null != p
+			? "(" + Integer.toString(p.x) + ", " + Integer.toString(p.y) + ")"
+			: "(NULL)";
 	}
 }

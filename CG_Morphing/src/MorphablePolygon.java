@@ -23,9 +23,6 @@ public class MorphablePolygon {
 		center = new Point(cA.x, cA.y); //set pA's center as the polygon's center
 		int xDiff = cB.x - cA.x;
 		int yDiff = cB.y - cA.y;
-	
-		//set the first element of pA as reference point
-		Point2D basePoint = new Point2D(pA.xpoints[0], pA.ypoints[0]);
 		
 		//Merge points
 		points = new ArrayList<MorphablePoint>();
@@ -40,6 +37,8 @@ public class MorphablePolygon {
 		
 		sortPoints();
 		setProjections();
+		
+		printPoints();
 	}
 	
 	//get the transition polygon between stateA & stateB
@@ -113,10 +112,12 @@ public class MorphablePolygon {
 					mp.stateB = getIntersection(
 						getNeighbor(i, false), getNeighbor(i, true),
 						center, mp.stateA);
+					mp.stateB = mp.stateB != null ? mp.stateB : mp.stateA; //compromise
 				} else {
 					mp.stateA = getIntersection(
 						getNeighbor(i, false), getNeighbor(i, true),
 						center, mp.stateB);
+					mp.stateA = mp.stateA != null ? mp.stateA : mp.stateB; //compromise
 				}
 				points.set(i, mp);
 			}
@@ -147,21 +148,20 @@ public class MorphablePolygon {
 	}
 	
 	public Point getIntersection(Point a1, Point a2, Point b1, Point b2) {
-		MorphablePoint mA = new MorphablePoint(a1, a2);
-		MorphablePoint mB = new MorphablePoint(b1, b2);
+		float d = (b2.y - b1.y) * (a2.x - a1.x) - (b2.x - b1.x) * (a2.y - a1.y);
+		if (d == 0.0f) return null; //lines are parallel
 		
-		Point2D uVA = mA.unitVector(false);
-		Point2D uVB = mB.unitVector(false);
+		float ua = ((b2.x - b1.x) * (a1.y - b1.y) - (b2.y - b1.y) * (a1.x - b1.x))/d;
+		float ub = ((a2.x - a1.x) * (a1.y - b1.y) - (a2.y - a1.y) * (a1.x - b1.x))/d;
 		
-		float dA = uVA.y/uVA.x;
-		float rA = dA * a1.x - a1.y;
+		if (ua >= 0.0f && ua <= 1.0f &&
+			ub >= 0.0f && ub <= 1.0f) {
+			return new Point(
+				Math.round(a1.x + ua * (a2.x - a1.x)),
+				Math.round(a1.y + ua * (a2.y - a1.y)));
+		}
 		
-		float dB = uVB.y/uVB.x;
-		float rB = dB * b1.x - b1.y;
-		
-		return new Point(
-			Math.round((rA - rB)/(dA - dB)),
-			Math.round(((dA * rB) - (dB * rB))/(dB - dA)));
+		return null;
 	}
 	
 	private ArrayList<MorphablePoint> quickSort(ArrayList<MorphablePoint> mPoints) {
