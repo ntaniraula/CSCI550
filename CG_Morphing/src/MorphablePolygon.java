@@ -38,55 +38,8 @@ public class MorphablePolygon {
 				null, new Point(pB.xpoints[i] - xDiff, pB.ypoints[i] - yDiff)));
 		}
 		
-		//Test
-		center = new Point(200, 200);
-		points = new ArrayList<MorphablePoint>();
-		points.add(new MorphablePoint(new Point(300, 300), null));
-		points.add(new MorphablePoint(new Point(300, 100), null));
-		points.add(new MorphablePoint(new Point(100, 100), null));
-		points.add(new MorphablePoint(new Point(100, 300), null));
-		points.add(new MorphablePoint(null, new Point(400, 200)));
-		points.add(new MorphablePoint(null, new Point(200, 0  )));
-		points.add(new MorphablePoint(null, new Point(0  , 200)));
-		points.add(new MorphablePoint(null, new Point(200, 400)));
-		
-		System.out.println("initial");
-		printPoints();
-		System.out.println();
-		
 		sortPoints();
-		
-		//Test
-		//points = new ArrayList<MorphablePoint>();
-		//points.add(new MorphablePoint(new Point(300, 300), null));
-		//points.add(new MorphablePoint(null, new Point(400, 200)));
-		//points.add(new MorphablePoint(new Point(300, 100), null));
-		//points.add(new MorphablePoint(null, new Point(200, 0  )));
-		//points.add(new MorphablePoint(new Point(100, 100), null));
-		//points.add(new MorphablePoint(null, new Point(0  , 200)));
-		//points.add(new MorphablePoint(new Point(100, 300), null));
-		//points.add(new MorphablePoint(null, new Point(200, 400)));
-		
-		System.out.println("after sort");
-		printPoints();
-		System.out.println();
-		
 		setProjections();
-		
-		//Test
-		points = new ArrayList<MorphablePoint>();
-		points.add(new MorphablePoint(new Point(300, 300), new Point(250, 250)));
-		points.add(new MorphablePoint(new Point(300, 200), new Point(400, 200)));
-		points.add(new MorphablePoint(new Point(300, 100), new Point(250, 150)));
-		points.add(new MorphablePoint(new Point(200, 100), new Point(200, 0  )));
-		points.add(new MorphablePoint(new Point(100, 100), new Point(150, 150)));
-		points.add(new MorphablePoint(new Point(100, 200), new Point(0  , 200)));
-		points.add(new MorphablePoint(new Point(100, 300), new Point(150, 250)));
-		points.add(new MorphablePoint(new Point(100, 200), new Point(200, 400)));
-		
-		System.out.println("after projection");
-		printPoints();
-		System.out.println();
 	}
 	
 	//get the transition polygon between stateA & stateB
@@ -147,36 +100,7 @@ public class MorphablePolygon {
 	}
 	
 	public void sortPoints() {
-		boolean swapped;
-		do {
-			swapped = false;
-			for (int i = 1; i < points.size() - 1; i++) {
-				int isLess = pointCcwLess(points.get(i-1), points.get(i));
-				if (isLess == 1) {
-					swapPoints(i-1, i);
-					swapped = true;
-				} else if (isLess == 0) { //the points are in the same centerline
-					mergePoints(i-1, i);
-				}
-			}			
-		} while (!swapped);
-	}
-	
-	public void swapPoints(int index1, int index2) {
-		MorphablePoint temp = points.get(index1);
-		points.set(index1, points.get(index2));
-		points.set(index2, temp);
-	}
-	
-	public void mergePoints(int index1, int index2) {
-		MorphablePoint newPoint = new MorphablePoint();
-		newPoint.stateA = null != points.get(index1).stateA
-			? points.get(index1).stateA : points.get(index2).stateA;
-		newPoint.stateB = null != points.get(index1).stateB
-			? points.get(index1).stateB : points.get(index2).stateB;
-			
-		points.set(index1, newPoint);
-		points.remove(index2);
+		points = quickSort(points);
 	}
 	
 	public void setProjections() {
@@ -240,6 +164,35 @@ public class MorphablePolygon {
 			Math.round(((dA * rB) - (dB * rB))/(dB - dA)));
 	}
 	
+	private ArrayList<MorphablePoint> quickSort(ArrayList<MorphablePoint> mPoints) {
+		if (mPoints.size() <= 1) return mPoints;
+		else {
+			ArrayList<MorphablePoint> result = new ArrayList<MorphablePoint>();
+			
+			MorphablePoint pivot = mPoints.get(0);
+			ArrayList<MorphablePoint> left   = new ArrayList<MorphablePoint>();
+			ArrayList<MorphablePoint> right  = new ArrayList<MorphablePoint>();
+			
+			System.out.println("------------");
+			
+			for (int i = 1; i < mPoints.size(); i++) {
+				int isLess = pointCcwLess(pivot, mPoints.get(i));
+				if (isLess == -1) left.add(mPoints.get(i));
+				else if (isLess == 1) right.add(mPoints.get(i));
+				else { //merged
+					pivot.stateA = null != pivot.stateA ? pivot.stateA : mPoints.get(i).stateA;
+					pivot.stateB = null != pivot.stateB ? pivot.stateB : mPoints.get(i).stateB;
+				}
+			}
+			
+			result.addAll(quickSort(left));
+			result.add(pivot);
+			result.addAll(quickSort(right));
+			
+			return result;
+		}
+	}
+	
 	private void printPoints() {
 		System.out.println("Size: " + Integer.toString(points.size()));
 		for (int i = 0; i < points.size(); i++) {
@@ -251,5 +204,14 @@ public class MorphablePolygon {
 					? Integer.toString(p.stateB.x) + ", " + Integer.toString(p.stateB.y) : "NULL") +
 				")]");
 		}
+	}
+	
+	private void printPoints(ArrayList<MorphablePoint> mPoints) {
+		String result = "";
+		for (int i = 0; i < mPoints.size(); i++) {
+			result = result + mPoints.get(i).toString();
+			result += i == mPoints.size() - 1 ? "" : ", ";
+		}
+		System.out.println(result);
 	}
 }

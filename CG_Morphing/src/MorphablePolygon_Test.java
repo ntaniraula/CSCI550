@@ -1,11 +1,10 @@
 import java.awt.Point;
+import java.util.ArrayList;
 
 public class MorphablePolygon_Test {
 	public static void main(String args[]) {
 		testPointCcwLess();
 		testSortPoints();
-		testSwapPoints();
-		testMergePoints();
 		testSetProjections();
 		testGetNeighbor();
 		testGetIntersection();
@@ -71,16 +70,40 @@ public class MorphablePolygon_Test {
 		System.out.println("m2    : " + m2.toString());
 		System.out.println("result: " + Integer.toString(result));
 		
+		m1 = new MorphablePoint(new Point(300, 100), null);
+		m2 = new MorphablePoint(null, new Point(400, 200));
+		result = mPolygon.pointCcwLess(m1, m2);
+		System.out.println("m1    : " + m1.toString());
+		System.out.println("m2    : " + m2.toString());
+		System.out.println("result: " + Integer.toString(result));
+		
 		System.out.println();
 	}
 	
 	static void testSortPoints() {
-	}
-	
-	static void testSwapPoints() {
-	}
-	
-	static void testMergePoints() {
+		Point center;
+		ArrayList<MorphablePoint> points;
+		
+		MorphablePolygon mPolygon = new MorphablePolygon();
+		System.out.println("Sort Points Test");
+		
+		center = new Point(200, 200);
+		points = new ArrayList<MorphablePoint>();
+		points.add(new MorphablePoint(new Point(300, 300), null));
+		points.add(new MorphablePoint(new Point(300, 100), null));
+		points.add(new MorphablePoint(new Point(100, 100), null));
+		points.add(new MorphablePoint(new Point(100, 300), null));
+		points.add(new MorphablePoint(null, new Point(400, 200)));
+		points.add(new MorphablePoint(null, new Point(200, 0  )));
+		points.add(new MorphablePoint(null, new Point(0  , 200)));
+		points.add(new MorphablePoint(null, new Point(200, 400)));
+		mPolygon.center = center;
+		mPolygon.points = points;
+		
+		mPolygon.sortPoints();
+		printMorphablePolygon(mPolygon, "Sort Points Test");
+		
+		System.out.println();
 	}
 	
 	static void testSetProjections() {
