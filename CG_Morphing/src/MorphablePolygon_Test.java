@@ -107,9 +107,78 @@ public class MorphablePolygon_Test {
 	}
 	
 	static void testSetProjections() {
+		Point center;
+		ArrayList<MorphablePoint> points;
+		
+		MorphablePolygon mPolygon = new MorphablePolygon();
+		System.out.println("Set Projections Test");
+		
+		center = new Point(200, 200);
+		points = new ArrayList<MorphablePoint>();
+		points.add(new MorphablePoint(null, new Point(0  , 200)));
+		points.add(new MorphablePoint(new Point(300, 100), null));
+		points.add(new MorphablePoint(null, new Point(400, 200)));
+		points.add(new MorphablePoint(new Point(300, 300), null));
+		points.add(new MorphablePoint(null, new Point(200, 400)));
+		points.add(new MorphablePoint(new Point(100, 300), null));
+		points.add(new MorphablePoint(null, new Point(200, 0  )));
+		points.add(new MorphablePoint(new Point(100, 100), null));
+		
+		mPolygon.center = center;
+		mPolygon.points = points;
+		
+		mPolygon.setProjections();
+		printMorphablePolygon(mPolygon, "Set Projections Test");
+		
+		System.out.println();
 	}
 	
 	static void testGetNeighbor() {
+		Point center;
+		ArrayList<MorphablePoint> points;
+		
+		MorphablePolygon mPolygon = new MorphablePolygon();
+		System.out.println("Get Neighbor Test");
+		
+		Point result;
+		
+		center = new Point(200, 200);
+		points = new ArrayList<MorphablePoint>();
+		points.add(new MorphablePoint(null, new Point(0  , 200)));
+		points.add(new MorphablePoint(new Point(300, 100), null));
+		points.add(new MorphablePoint(null, new Point(400, 200)));
+		points.add(new MorphablePoint(new Point(300, 300), null));
+		points.add(new MorphablePoint(null, new Point(200, 400)));
+		points.add(new MorphablePoint(new Point(100, 300), null));
+		points.add(new MorphablePoint(null, new Point(200, 0  )));
+		points.add(new MorphablePoint(new Point(100, 100), null));
+		
+		mPolygon.center = center;
+		mPolygon.points = points;
+		
+		printMorphablePolygon(mPolygon, "Get Neighbor Test");
+		System.out.println();
+		
+		int index;
+		boolean down;
+		
+		index = 0;
+		down = false;
+		result = mPolygon.getNeighbor(index, down);
+		System.out.println("Input     : " + mPolygon.points.get(index).toString());
+		System.out.println("Direction : " + (down ? "down" : "up"));
+		System.out.println("Output    : " + getPointString(result));
+		System.out.println();
+		
+		index = 0;
+		down = true;
+		result = mPolygon.getNeighbor(index, down);
+		System.out.println("Input     : " + mPolygon.points.get(index).toString());
+		System.out.println("Direction : " + (down ? "down" : "up"));
+		System.out.println("Output    : " + getPointString(result));
+		System.out.println();
+		
+		System.out.println();
 	}
 	
 	static void testGetIntersection() {

@@ -173,8 +173,6 @@ public class MorphablePolygon {
 			ArrayList<MorphablePoint> left   = new ArrayList<MorphablePoint>();
 			ArrayList<MorphablePoint> right  = new ArrayList<MorphablePoint>();
 			
-			System.out.println("------------");
-			
 			for (int i = 1; i < mPoints.size(); i++) {
 				int isLess = pointCcwLess(pivot, mPoints.get(i));
 				if (isLess == -1) left.add(mPoints.get(i));
