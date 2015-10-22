@@ -43,7 +43,7 @@ class CvMorphing extends Canvas implements MouseListener {
 
 	Point hRefLinePoint, vRefLinePoint;
 
-	MorphAnimation morphAnim;
+	//MorphAnimation morphAnim;
 	MorphablePolygon morphPolygon;
 	
 	int maxSteps;
@@ -298,16 +298,16 @@ class CvMorphing extends Canvas implements MouseListener {
 
 	}
 
-	private void startAnimation() {
-		MorphablePolygon mPoly = new MorphablePolygon();
-		mPoly.setPoints(targetPolygon, tCenter, refPolygon, refCenter);
-		morphAnim = new MorphAnimation(this.getGraphics(), this);
-		morphAnim.setMaxSteps(200);
-		morphAnim.setMorphablePolygon(mPoly);
-		Thread t = new Thread(morphAnim);
-		t.start();
-
-	}
+	//private void startAnimation() {
+	//	MorphablePolygon mPoly = new MorphablePolygon();
+	//	mPoly.setPoints(targetPolygon, tCenter, refPolygon, refCenter);
+	//	morphAnim = new MorphAnimation(this.getGraphics(), this);
+	//	morphAnim.setMaxSteps(200);
+	//	morphAnim.setMorphablePolygon(mPoly);
+	//	Thread t = new Thread(morphAnim);
+	//	t.start();
+    //
+	//}
 
 	public void mouseEntered(MouseEvent arg0) {
 	}
